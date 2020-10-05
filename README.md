@@ -84,84 +84,10 @@ python transfer_data_to_squad_format.py
 
 ## How to evaluate the result:
 
-1. Find the predictions.json for this model;
-2. Open the prediction.json, and replace the first line "{" to 
 ```
-{"answer":{
-```
-3. replace the last line to 
-```
-    },"sp":{}
-}
-```
-4. Since I need to maintain the same test file format of the submission of the hotpotqa metric, I will fix this bug after I finish supporting fact prediction.
-5. I have finished the supporting fact prediction, so i need to paste the result of support fact to the value of "sp"
-
-Commands to run:
-```
-cd /home/zhengc12/codes/python_codes/rangers/evaluate_accuracy
-
-python hotpot_evaluate_v1.py predictions.json hotpot_dev_distractor_v1.json 
+sh run_pred.sh
 ```
 
-5. Some results:
-```
-DFGN model: {'em': 0.5482781904118839, 'f1': 0.6877460077209591, 'prec': 0.71700414485357, 'recall': 0.6986055041439921, 'sp_em': 0.4661715057393653, 'sp_f1': 0.7991885532128826, 'sp_prec': 0.8066864994110159, 'sp_recall': 0.827552329507095, 'joint_em': 0.29561107359891964, 'joint_f1': 0.5782885421096149, 'joint_prec': 0.6060644493551285, 'joint_recall': 0.6070692788218094}
-
-Akari Aisa ICLR 2020: {'em': 0.6329507089804186, 'f1': 0.771376831921745, 'prec': 0.8037175662940628, 'recall': 0.7812729369790383, 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0}
-Aksri github bert base:
-{
-  "exact": 60.60769750168805,
-  "f1": 74.45707974099558,
-  "total": 7405,
-  "HasAns_exact": 60.60769750168805,
-  "HasAns_f1": 74.45707974099558,
-  "HasAns_total": 7405
-}
-
-
-4-1-bert-base: {'em': 0.5304523970290345, 'f1': 0.6667159890426464, 'prec': 0.6955686941358848, 'recall': 0.6795871399764839, 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0} this version can not learn yes/no
-
-4-2-bert-base: {'em': 0.575557056043214,  'f1': 0.7145970912860619, 'prec': 0.7422877631216432, 'recall': 0.7276481006426999, 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0}
-
-4-2-bert-large: {'em': 0.6264686022957461, 'f1': 0.7614361781682832, 'prec': 0.7924018830260162, 'recall': 0.7694924741025355, 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0}
-
-{'em': 0.6264686022957461, 'f1': 0.7614361781682832, 'prec': 0.7924018830260162, 'recall': 0.7694924741025355, 'sp_em': 0.5729912221471979, 'sp_f1': 0.8382543122718847, 'sp_prec': 0.8900130756781682, 'sp_recall': 0.809809973955827, 'joint_em': 0.38406482106684675, 'joint_f1': 0.6536980141261085, 'joint_prec': 0.7229778669027138, 'joint_recall': 0.6370791517482914}
-```
-
-albert acc:
-```
-albert large: {'em': 0.5449020931802836, 'f1': 0.7042448926310603, 'prec': 0.7326006516274995, 'recall': 0.7127971620048732 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0}
-
-albert xxlarge v1: 5_14_albert_xxlarge_v1_al_token_30.json {'em': 0.5902768399729912, 'f1': 0.749242531883343, 'prec': 0.7770186867300307, 'recall': 0.7570993147073519, 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0}
-
-albert xxlarge v2: 5_14_albert_xxlarge_v2_al_30.json {'em': 0.5821742066171506, 'f1': 0.7452077473236942, 'prec': 0.7740000774977144, 'recall': 0.7542857260902518, 'sp_em': 0.0, 'sp_f1': 0.0, 'sp_prec': 0.0, 'sp_recall': 0.0, 'joint_em': 0.0, 'joint_f1': 0.0, 'joint_prec': 0.0, 'joint_recall': 0.0}
-
-bert large qa and albert large sp:
-{'em': 0.6264686022957461, 'f1': 0.7614361781682832, 'prec': 0.7924018830260162, 'recall': 0.7694924741025355, 'sp_em': 0.2831870357866307, 'sp_f1': 0.6018914718712272, 'sp_prec': 0.6612874184109836, 'sp_recall': 0.5670441464904656, 'joint_em': 0.19797434166103983, 'joint_f1': 0.4727103012896842, 'joint_prec': 0.5394022524498017, 'joint_recall': 0.4502651642565539}
-```
-
-### some import model ckpt store location:
-Avicenna: large version model
-```
-/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/data/  ### data location
-/home/hlr/shared/data/chenzheng/data/hotpotqa/models/hotpot_models/ ### model location
-/home/hlr/shared/data/chenzheng/data/hotpotqa/models/hotpot_models/reader_4_2_change_is_impossible/ ### bert large para_reader
-/home/hlr/shared/data/chenzheng/data/hotpotqa/models/hotpot_models/reader_4_2_change_is_impossible/sp/  ### bert large para_sp
-/home/hlr/shared/data/chenzheng/data/hotpotqa/models/hotpot_models/sequential_sentence_selector/    ### I forgot what it is...
-
-/home/hlr/shared/data/chenzheng/data/hotpotqa/data/ranger_output/ckpt/para_sele_ckpt/second_time_training ### maybe it is the ckpt of para selection... not sure.  no ckpt
-
-```
-
-Turing: base version model
-```
-/tank/space/chen_zheng/data/hotpotqa/rangers/data/ ### data location
-/tank/space/chen_zheng/data/hotpotqa/models/hotpot_models ### bert version models ckpt(share sequential_sentence_selector)
-/tank/space/chen_zheng/data/hotpotqa/rangers/models/ ### roberta and albert para reader model ckpt
-/tank/space/chen_zheng/data/hotpotqa/data/ranger_output/ckpt/para_sele_ckpt/second_time_training ### maybe it is the ckpt of para selection... not sure. it has ckpt.
-```
-I think that para selection model ckpt only in /tank/space/chen_zheng/data/hotpotqa/data/ranger_output/ckpt/para_sele_ckpt/second_time_training.
 
 
 ### reader code 
