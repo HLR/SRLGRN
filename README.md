@@ -1,6 +1,6 @@
 # The source code of SRLGRN
 
-<p align="center"><img width="80%" src="images/SRLGRN.pdf" /></p>
+<p align="center"><img width="95%" src="images/SRLGRN.jpg" /></p>
 
 ## Two important global file:
 1. For selecting paragraph: para_sele_config.py
