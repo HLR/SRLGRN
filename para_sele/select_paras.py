@@ -5,15 +5,12 @@ import os
 import logging
 import pandas
 from tqdm import tqdm
+from config import set_args
 import json
 import numpy as np
 import torch
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 from collections import Counter
-
-import sys
-sys.path.append('../')
-from config.para_sele_config import PARA_CONFIG
 from pytorch_pretrained_bert.tokenization import BertTokenizer
 from pytorch_pretrained_bert.modeling import BertForSequenceClassification
 
@@ -140,7 +137,7 @@ logger = logging.getLogger(__name__)
 def evaluate():
     logger.info("***** Running evaluation *****")
     logger.info("  Num examples = %d", len(examples))
-    logger.info("  Batch size = %d", para_cfg.eval_batch_size)
+    logger.info("  Batch size = %d", args.eval_batch_size)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
@@ -148,7 +145,7 @@ def evaluate():
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     # Run prediction for full data
     sampler = SequentialSampler(data)
-    dataloader = DataLoader(data, sampler=sampler, batch_size=para_cfg.eval_batch_size)
+    dataloader = DataLoader(data, sampler=sampler, batch_size=args.eval_batch_size)
 
     model.eval()
     eval_loss, eval_accuracy = 0, 0
@@ -280,25 +277,30 @@ def get_dataframe(file_path):
 
 
 if __name__ == "__main__":
-    ## this code is use for test. Then cfg.input_path output_path is for test
-    para_cfg = PARA_CONFIG()
+    args = set_args()
 
     # Load a trained model that you have fine-tuned
-    model_state_dict = torch.load(para_cfg.ckpt_path)
-    model = BertForSequenceClassification.from_pretrained(para_cfg.bert_model, state_dict=model_state_dict)
+    # model_state_dict = torch.load(args.ckpt_path)
+    # model = BertForSequenceClassification.from_pretrained(args.bert_model, state_dict=model_state_dict)
+    # model.cuda()
+    # model = torch.nn.DataParallel(model)
+    # tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=args.do_lower_case)
+    model_state_dict = torch.load(args.ckpt_path)
+    model = BertForSequenceClassification.from_pretrained('/home/zhengchen/codes/python_codes/hotpotqa_submit/ckpt/para_sele/', state_dict=model_state_dict)
     model.cuda()
     model = torch.nn.DataParallel(model)
-    tokenizer = BertTokenizer.from_pretrained(para_cfg.bert_model, do_lower_case=para_cfg.do_lower_case)
+    tokenizer = BertTokenizer.from_pretrained('/home/zhengchen/codes/python_codes/hotpotqa_submit/ckpt/para_sele/vocab.txt', do_lower_case=args.do_lower_case)
 
     processor = DataProcessor()
     label_list = processor.get_labels()
-    source_data, dataframe = get_dataframe(para_cfg.input_path)
+    source_data, dataframe = get_dataframe(args.input_path)
 
     examples = processor.create_examples(dataframe, 'test')
-    features = convert_examples_to_features(examples, label_list, para_cfg.max_seq_length, tokenizer, verbose=True)
+    features = convert_examples_to_features(examples, label_list, args.max_seq_length, tokenizer, verbose=True)
 
     score, _, _ = evaluate()
-    if para_cfg.split == 'dev':
-        get_dev_paras(source_data, score, para_cfg.output_path)
-    elif para_cfg.split == 'train':
-        get_train_paras(source_data, score, para_cfg.output_path)
+    if args.split == 'dev':
+        get_dev_paras(source_data, score, args.output_path)
+    elif args.split == 'train':
+        get_train_paras(source_data, score, args.output_path)
+

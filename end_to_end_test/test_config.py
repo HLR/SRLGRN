@@ -8,39 +8,36 @@ class TEST_CONFIG(object):
         ### Hyper-parameters settings.
         ####################################################################
         self.visable_gpus = 0,
-        # self.para_sele_bert_model = 'bert-base-cased'
-        self.para_sele_bert_model = 'bert-large-uncased'
+        self.para_sele_bert_model = 'bert-base-cased'
         self.para_sp_bert_model = 'bert-large-uncased'      ## bert-base-cased, bert-base-uncased, bert-large-cased, bert-large-uncased
         self.para_reader_bert_model = 'bert-large-uncased'  ## albert-base-v2, albert-large-v2, albert-xlarge-v2, albert-xxlarge-v2
-        self.sele_do_lower_case = True #False
+        self.sele_do_lower_case = False
         self.do_lower_case = True                           ## Set this flag if you are using an uncased model. Whether to lower case the input text. True for uncased models, False for cased models.
         self.no_cuda = False                                ## Whether not to use CUDA when available
         self.seed = 42                                      ## random seed for initialization
-        self.predict_batch_size = 16                         ## Total batch size for predictions.
+        self.predict_batch_size = 16                        ## Total batch size for predictions.
 
         ####################################################################
         ### input_file, intermediate_file, and output_file settings.
         ####################################################################
-        self.test_input_file = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/intermediate_dir/hotpot_dev_distractor_v1.json'
-        self.intermediate_dir = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/intermediate_dir/'          ## store all of the intermediate files, such as para_sele_res, generated data preprocessing files, blabla...
-        self.final_output_dir = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/res/'                                                     ## store the final prediction.json file.
+        self.test_input_file = '../input.json'
+        self.intermediate_dir = '../tmp_dir/intermediate_dir/'          ## store all of the intermediate files, such as para_sele_res, generated data preprocessing files, blabla...
+        self.final_output_dir = '../tmp_dir/res/'                                                     ## store the final prediction.json file.
         self.final_output_sp_file = self.final_output_dir + '/sp.json'
         self.final_output_ans_file = self.final_output_dir + '/ans.json'
-        self.final_output_joint_file = self.final_output_dir + '/joint.json'
-        self.para_sele_predict_output_file = self.intermediate_dir + 'para_sele_predict_file_3.json'                 ## selection-format json file for evaluation.
-        self.para_sp_predict_input_file = self.intermediate_dir + 'para_sp_predict_input_file3.json'                ## supporting_fact-format json file for evaluation.
-        self.para_reader_predict_input_file = self.intermediate_dir + 'para_reader_predict_input_file3.json'        ## reader-format json file for evaluation.
+        self.final_output_joint_file = '../pred.json'
+        self.para_sele_predict_output_file = self.intermediate_dir + 'para_sele_predict_file.json'                 ## selection-format json file for evaluation.
+        self.para_sp_predict_input_file = self.intermediate_dir + 'para_sp_predict_input_file1.json'                ## supporting_fact-format json file for evaluation.
+        self.para_reader_predict_input_file = self.intermediate_dir + 'para_reader_predict_input_file1.json'        ## reader-format json file for evaluation.
 
         ####################################################################
         ### pretrained ckpt settings.
         ####################################################################
-        # self.para_sele_path = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/ckpt/para_sele/'
-        # self.para_sele_ckpt = self.para_sele_path + 'para_select_model.bin'
-        self.para_sele_path = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/ckpt/para_sele_large_5_17/'
-        self.para_sele_ckpt = self.para_sele_path + 'Evaluation_epoch2_ckpt.bin'
-        self.para_sp_path = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/ckpt/para_sp/'
+        self.para_sele_path = '../ckpt/para_sele/'
+        self.para_sele_ckpt = self.para_sele_path + 'para_select_model.bin'
+        self.para_sp_path = '../ckpt/para_sp/'
         self.para_sp_ckpt = self.para_sp_path + 'pytorch_model.bin'
-        self.para_reader_path = '/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/ckpt/para_reader/'
+        self.para_reader_path = '../ckpt/para_reader/'
         self.para_reader_ckpt = self.para_reader_path + 'pytorch_model.bin'
 
         ####################################################################
@@ -50,7 +47,7 @@ class TEST_CONFIG(object):
         self.para_sp_max_query_length = 64 
         self.para_reader_max_query_length = 64 
 
-        self.para_sele_max_seq_length = 256 # 128
+        self.para_sele_max_seq_length = 128
         self.para_sp_max_seq_length = 256
         self.para_reader_max_seq_length = 384           ## The maximum total input sequence length after WordPiece tokenization. Sequences "
                                                         ## "longer than this will be truncated, and sequences shorter than this will be padded."

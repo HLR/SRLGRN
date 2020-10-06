@@ -2,6 +2,7 @@
 ####################################################################################
 # Goal: scripts to generate the final output answer of hotpotqa task.
 # Author: Chen Zheng
+# School: Michigan State University
 ####################################################################################
 
 
@@ -10,9 +11,15 @@
 # Goal: extract two or three most relevant paragraphs.
 # Selection: If predict_batch_size == 4, then the gpu memory is  MiB 
 ####################################################################################
-cd end_to_end_test/
-python para_sele_test.py
-cd ../
+# cd end_to_end_test/
+# python para_sele_test.py
+# cd ../
+
+python para_sele/select_paras.py    \
+ --input_path="input.json"    \
+ --output_path="tmp_dir/intermediate_dir/para_sele_predict_file.json"  \
+ --ckpt_path="ckpt/para_sele/para_select_model.bin" 
+
 ####################################################################################
 # Second step: paragraph selection result ---- squad format.
 #              paragraph selection result ---- support fact format.
@@ -37,9 +44,7 @@ python para_reader_test.py
 # Work folder: rangers/evaluate_accuracy
 ####################################################################################
 
-python merge_sp_and_reader_res.py /home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/res/ans.json /home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/res/sp.json ../evaluate_accuracy/pred.json
-cd ../evaluate_accuracy
-python hotpot_evaluate_v1.py my_pred_answer.json hotpot_dev_distractor_v1.json
-
 cd ../
 python end_to_end_test/merge_sp_and_reader_res.py tmp_dir/res/ans.json tmp_dir/res/sp.json pred.json
+
+python ../rangers/evaluate_accuracy/hotpot_evaluate_v1.py pred.json input.json

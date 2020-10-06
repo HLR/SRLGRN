@@ -136,8 +136,8 @@ def main():
             vocab_file, do_lower_case=reader_cfg.do_lower_case)
 
         print(model)
-        # import sys
-        # sys.exit()
+        import sys
+        sys.exit()
 
         print('The', reader_cfg.bert_model, 'model is successfully loaded!', flush=True)
 

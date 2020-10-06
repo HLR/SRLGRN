@@ -269,13 +269,6 @@ def main():
         tokenizer = BertTokenizer.from_pretrained(
             vocab_file, do_lower_case=sp_cfg.do_lower_case)
 
-        model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
-        # output_config_file = os.path.join(sele_cfg.ckpt_dir, 'config.json')
-        model_to_save.config.to_json_file('/home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/ckpt/para_sp/config.json')
-
-        import sys
-        sys.exit()
-
         logger.info(
             'The {} model is successfully loaded!'.format(sp_cfg.bert_model))
 
