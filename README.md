@@ -29,7 +29,7 @@ sh run_pred.sh
 
 1. transfer data to squad format (data_preprocessing):
 ```
-cd /home/zhengc12/codes/python_codes/rangers/data_preprocessing
+cd end_to_end_test/
 
 python transfer_data_to_squad_format.py
 ```
