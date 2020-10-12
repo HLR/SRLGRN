@@ -2,53 +2,17 @@
 
 <p align="center"><img width="95%" src="images/SRLGRN.jpg" /></p>
 
-## Two important global file:
-1. For selecting paragraph: para_sele_config.py
-2. For reader model: para_reader_config.py 
-3. For supporting fact model: para_support_fact_config.py 
-
-Note that you must guantee that your dir, your files, your hyper-parameters are correct.
-
-## Some important data folders:
-1. In the turing machine, all of my data are storing in: /tank/space/chen_zheng/data/hotpotqa/rangers/data/
-> Data description:
->- dev_selected_paras.json  
->- train_selected_paras.json :  result generateed from select_paragraph model (retrieval)
->- hotpot_dev_distractor_v1.json  
->- hotpot_train_v1.1.json : raw data from hotpot webpage
->- hotpot_dev_squad.json  
->- hotpot_train_squad.json  : the result generated from my code, which combines selected_paras.json and raw data(raw data with only 2-3 paragraphs) and transfer to squad format, then the model can learn by (reader) model
-
-Note that in the reader training section, we need to do the feature from squad data, and we store to the same folder of squad file.
-like: cached_train_features_file = reader_cfg.train_file + '_{0}_{1}_{2}_{3}
-
-2. In the Avicenna machine:
-
 ## running whole evaluation code:
-1. Make sure the test_config is correct: ./end_to_end_test/test_config.py
+1. Download the ckpt files (the link is shown in the ckpt folder);
 
+2. Make sure the test_config is correct: 
+```
+./end_to_end_test/test_config.py
+```
+
+3. running the script:
 ```
 sh run_pred.sh
-```
-
-## Some important command:
-1. generate the selected paragraphs from raw data by the retrieval model:
-> This model is Avicenna machine only
-
-```
-cd /home/zhengchen/codes/python_codes/hotpotqa
-
-CUDA_VISIBLE_DEVICES=1 python paragraph_selection/select_paras.py     --input_path=/home/zhengchen/codes/python_codes/hotpotqa/DFGN/data/raw_data/hotpot_train_v1.1.json     
---output_path=/home/zhengchen/codes/python_codes/hotpotqa/DFGN/data/raw_data/train_selected_paras.json     
---ckpt_path=work_dir/para_select_model.bin
-```
-
-2. run reader code:
-> This model is turing machine only
-```
-/home/zhengc12/codes/python_codes/rangers/para_reader
-
-python train.py
 ```
 
 >- Turing: Note that I use 4 GeForce RTX 2080 Ti for my emperiment, and the batch size is 32.
@@ -58,28 +22,46 @@ python train.py
 >- Avicenna: Note that I use 1 TITAN RTX for my emperiment, and the batch size is 8. take around 20,307MB。
 >- Training bert-large-uncase
 
-3. run support fact code:
-> train:
-```
-/home/zhengc12/codes/python_codes/rangers/para_sp
+>- Supporting fact: If predict_batch_size == 4, then the gpu memory is 7669 MiB 
+>- Answer span prediction: If predict_batch_size == 4, then the gpu memory is 3709 MiB 
 
-python train.py
-```
-> test:
-```
-/home/zhengc12/codes/python_codes/rangers/para_sp
+## Notes
 
-python predict.py
-```
-
-
-
-4. transfer train/dev combiniing sele_para.json and raw data ---> squad file:
-> This model is turing machine only
+1. transfer data to squad format (data_preprocessing):
 ```
 cd /home/zhengc12/codes/python_codes/rangers/data_preprocessing
 
 python transfer_data_to_squad_format.py
+```
+
+2. run supporting fact code:
+> train:
+```
+cd ./para_sp
+
+python train.py
+```
+
+> test:
+```
+./para_sp
+
+python predict.py
+```
+
+3. run reader code:
+> train:
+```
+cd ./para_reader
+
+python train.py
+```
+
+> test:
+```
+./para_reader
+
+python test.py
 ```
 
 ## How to evaluate the result:
@@ -87,7 +69,6 @@ python transfer_data_to_squad_format.py
 ```
 sh run_pred.sh
 ```
-
 
 
 ### reader code 
@@ -101,13 +82,22 @@ sh run_pred.sh
 04/27/2020 13:28:35 - INFO - rc_utils -   input_ids: 0 8015 12657 8676 13509 242 17835 2075 24085 136 26232 740 38687 30249 5841 29602 139 6 10 693 54 1433 1665 25 5 2107 1187 1921 937 9 147 116 2 267 3876 3792 25304 17 48 267 3540 17 46 700 2420 1640 5400 32643 24761 541 6 1646 5606 43 354 260 8015 12657 25214 14932 6 39409 14932 6 463 257 4 29 4 4526 219 3809 1023 28071 15841 8155 12186 33091 281 627 257 4 29 4 35213 3693 1990 858 705 2095 18 246 2586 37519 5224 6073 17165 12127 7761 22748 560 3789 4 700 2420 6 102 8648 1116 627 12597 40171 260 6493 6 354 102 4929 12 25782 3786 39409 14932 463 33091 281 102 858 705 2095 4897 7305 2630 7761 34972 12 3669 4 700 3917 879 46958 22268 12789 22730 438 38687 438 2723 5841 40668 139 179 627 15841 6414 1990 627 12592 858 705 2095 33557 26947 7305 877 11517 179 9029 4 179 627 41690 180 6 700 2420 7078 3628 11723 1409 45683 102 3479 8458 1116 12597 40171 1253 8155 10223 7878 627 571 1517 13681 833 242 1990 10443 6 24139 38060 4 438 38687 3916 324 438 2723 5841 40668 139 1640 5400 119 13161 2890 6 45629 43 354 260 8015 12657 2611 42276 463 25214 14932 8155 354 627 18115 7375 33557 26947 7305 2630 7761 858 705 2095 4 8877 354 102 8648 1116 627 38566 6493 4 8877 5234 34978 33091 281 627 2881 1187 2611 42276 15841 1116 858 705 2095 7761 30741 560 14420 4 330 424 2331 20068 118 4759 4663 1640 6 131 5400 32643 24761 844 6 45629 43 354 260 8015 12657 2611 42276 463 25214 14932 4 102 8648 1116 627 38566 6493 6 8877 38501 31499 293 281 627 18115 7375 7305 2630 7761 11762 1594 43052 4 8877 5234 34978 33091 281 627 2881 1187 2611 42276 15841 1116 11762 1594 43052 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 04/27/2020 13:28:35 - INFO - rc_utils -   input_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 04/27/2020 13:28:35 - INFO - rc_utils -   segment_ids: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
 04/27/2020 13:28:35 - INFO - rc_utils -   start_position: 87
+
 04/27/2020 13:28:35 - INFO - rc_utils -   end_position: 89
+
 04/27/2020 13:28:35 - INFO - rc_utils -   answer: ne v ada
+
 04/27/2020 13:42:21 - INFO - __main__ -     Saving train features into cached file /home/hlr/shared/data/chenzheng/data/hotpotqa/rangers/data/hotpot_train_squad.json_roberta-large_384_128_64
+
 04/27/2020 13:42:37 - INFO - __main__ -   ***** Running training *****
+
 04/27/2020 13:42:37 - INFO - __main__ -     Num orig examples = 90387
+
 04/27/2020 13:42:37 - INFO - __main__ -     Num split examples = 179081
+
 04/27/2020 13:42:37 - INFO - __main__ -     Batch size = 8
+
 04/27/2020 13:42:37 - INFO - __main__ -     Num steps = 33894
 
