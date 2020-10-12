@@ -6,6 +6,7 @@ The structure of the ckpt folder
     -- para_reader
     -- para_sele
     -- para_sp
+    -- README.md
 ```
 
 > para_sele ckpt download link:
