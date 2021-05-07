@@ -50,4 +50,5 @@ python para_reader_test.py
 cd ../
 python end_to_end_test/merge_sp_and_reader_res.py tmp_dir/res/ans.json tmp_dir/res/sp.json pred.json
 
-python ../rangers/evaluate_accuracy/hotpot_evaluate_v1.py pred.json input.json
+# python ../rangers/evaluate_accuracy/hotpot_evaluate_v1.py pred.json input.json
+python hotpot_evaluate_v1.py pred.json input.json
