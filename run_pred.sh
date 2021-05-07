@@ -14,6 +14,9 @@
 # cd end_to_end_test/
 # python para_sele_test.py
 # cd ../
+mkdir tmp_dir
+mkdir tmp_dir/intermediate_dir/
+mkdir tmp_dir/res/
 
 python para_sele/select_paras.py    \
  --input_path="input.json"    \
