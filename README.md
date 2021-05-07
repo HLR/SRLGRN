@@ -10,7 +10,13 @@
 ./end_to_end_test/test_config.py
 ```
 
-3. running the script:
+3. conda env:
+>-  conda env create -f srlgrn.yaml
+
+4. activate the conda env:
+>- source activate srlgrn
+
+5. running the script:
 ```
 sh run_pred.sh
 ```
@@ -25,7 +31,7 @@ sh run_pred.sh
 >- Supporting fact: If predict_batch_size == 4, then the gpu memory is 7669 MiB 
 >- Answer span prediction: If predict_batch_size == 4, then the gpu memory is 3709 MiB 
 
-## Notes
+## Notes (The important steps for train and test)
 
 1. transfer data to squad format (data_preprocessing):
 ```
