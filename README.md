@@ -18,7 +18,7 @@
 
 5. running the script:
 ```
-sh run_pred.sh
+CUDA_VISIBLE_DEVICES=0 sh run_pred.sh
 ```
 
 >- Turing: Note that I use 4 GeForce RTX 2080 Ti for my emperiment, and the batch size is 32.
